@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Jimp = require('jimp');
-
+import { CustomError } from '../interface/customerror';
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
 // returns the absolute path to the local image
@@ -20,7 +20,12 @@ export async function filterImageFromURL(inputURL: string): Promise<string>{
                 resolve(__dirname+outpath);
             });
         }).catch(err => {
-            reject('Image could not be downloaded from the given url. Please try with a different image url.');
+            // custom error object
+            let customError: CustomError = {
+                errCode: 422, 
+                errMessage: 'Image could not be downloaded from the given url. Please try with a different image url.'
+            }; 
+            reject(customError);
         });
     });
 }

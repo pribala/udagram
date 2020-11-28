@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
-
+import { CustomError } from './interface/customerror';
 (async () => {
 
   // Init the Express application
@@ -34,17 +34,27 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   // https://www.gstatic.com/webp/gallery/2.jpg
   // https://www.gstatic.com/webp/gallery/1.jpg
   app.get( "/filteredimage", async ( req, res) => {
+    // get the image url from request object
     const image_url = req.query.image_url;
+    // create custom error message
+    let customError: CustomError = {
+      errCode: 400, 
+      errMessage: 'Please provide a valid url.'
+    }; 
+    // validate url and show error message if url is invalid
     if (!image_url) {
-      return res.status(400)
-                  .send(`Please provide a valid url.`);
+      return res.status(customError.errCode)
+                  .send(customError.errMessage);
     }
-      try {
-        const filePath = await filterImageFromURL(image_url);
-        res.sendFile(filePath, () => {deleteLocalFiles([filePath])});
-      } catch(err) {
-          res.status(422).send(err);
-      }
+    try {
+      // call filterImageFromURL(image_url) to filter the image
+      const filePath = await filterImageFromURL(image_url);
+      // send the resulting file in the response &
+      // delete any files on the server on finish of the response
+      res.sendFile(filePath, () => {deleteLocalFiles([filePath])});
+    } catch(err) {
+      res.status(err.errCode).send(err.errMessage);
+    }
 
   } );
 
