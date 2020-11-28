@@ -20,8 +20,7 @@ export async function filterImageFromURL(inputURL: string): Promise<string>{
                 resolve(__dirname+outpath);
             });
         }).catch(err => {
-            console.log('Image not found!');
-            reject('Image not found!');
+            reject('Image could not be downloaded from the given url. Please try with a different image url.');
         });
     });
 }
