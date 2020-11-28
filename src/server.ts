@@ -30,17 +30,18 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   /**************************************************************************** */
 
   //! END @TODO1
-  app.get( "/filteredimage", async ( req, res ) => {
+  // public image urls for testing
+  // https://www.gstatic.com/webp/gallery/2.jpg
+  // https://www.gstatic.com/webp/gallery/1.jpg
+  app.get( "/filteredimage", async ( req, res) => {
     const image_url = req.query.image_url;
     if (!image_url) {
       return res.status(400)
                   .send(`Please provide a valid url.`);
     }
-
-    console.log(image_url);
       try {
         const filePath = await filterImageFromURL(image_url);
-        res.send(filePath);
+        res.sendFile(filePath, () => {deleteLocalFiles([filePath])});
       } catch {
         res.send('Image not found!');
       }
