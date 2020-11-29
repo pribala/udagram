@@ -10,8 +10,8 @@ import { CustomError } from '../interface/customerror';
 //    an absolute path to a filtered image locally saved file
 export async function filterImageFromURL(inputURL: string): Promise<string>{
     return new Promise( async (resolve, reject) => {
-            await Jimp.read(inputURL).then(photo => {
-            const outpath = '/tmp/filtered.'+Math.floor(Math.random() * 2000)+'.jpg';
+            await Jimp.read(inputURL).then((photo: Jimp) => {
+            const outpath: string = '/tmp/filtered.'+Math.floor(Math.random() * 2000)+'.jpg';
             photo
             .resize(256, 256) // resize
             .quality(60) // set JPEG quality
@@ -19,7 +19,7 @@ export async function filterImageFromURL(inputURL: string): Promise<string>{
             .write(__dirname+outpath, (img)=>{
                 resolve(__dirname+outpath);
             });
-        }).catch(err => {
+        }).catch((err: Error) => {
             // custom error object
             let customError: CustomError = {
                 errCode: 422, 

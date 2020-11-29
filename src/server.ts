@@ -33,9 +33,9 @@ import { CustomError } from './interface/customerror';
   // public image urls for testing
   // https://www.gstatic.com/webp/gallery/2.jpg
   // https://www.gstatic.com/webp/gallery/1.jpg
-  app.get( "/filteredimage", async ( req, res) => {
+  app.get( "/filteredimage", async ( req: express.Request, res: express.Response) => {
     // get the image url from request object
-    const image_url = req.query.image_url;
+    const image_url: string = req.query.image_url;
     // create custom error message
     let customError: CustomError = {
       errCode: 400, 
@@ -48,7 +48,7 @@ import { CustomError } from './interface/customerror';
     }
     try {
       // call filterImageFromURL(image_url) to filter the image
-      const filePath = await filterImageFromURL(image_url);
+      const filePath: string = await filterImageFromURL(image_url);
       // send the resulting file in the response &
       // delete any files on the server on finish of the response
       res.sendFile(filePath, () => {deleteLocalFiles([filePath])});
@@ -61,7 +61,7 @@ import { CustomError } from './interface/customerror';
 
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
+  app.get( "/", async ( req: express.Request, res: express.Response ) => {
     res.send("try GET /filteredimage?image_url={{}}")
   } );
 
